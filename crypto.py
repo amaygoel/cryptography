@@ -126,9 +126,15 @@ def create_public_key(private_key):
 def encrypt_mhkc(plaintext, public_key):
     C = []
     total = 0
-
     for char in plaintext:
-        M = byte_to_bits(ord(char))
+        bits = byte_to_bits(ord(char))
+        total = 0
+        for num in range(0,8):
+            value = int(bits[num])*int(public_key[num])
+            total += value
+        C.append(total)
+    return C
+        
 
 
 
@@ -167,6 +173,7 @@ def main():
     print(create_public_key(generate_private_key()))
     print(byte_to_bits(8))
     print(bits_to_byte([0,1,0,0,1,0,1,0]))
+    print(encrypt_mhkc("AMAY", create_public_key(generate_private_key())))
 
 if __name__ == "__main__":
     main()
