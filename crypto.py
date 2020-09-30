@@ -201,22 +201,22 @@ def bits_to_byte(bits):
 # main - to test code
 def main():
     # Testing code here
-    p = generate_private_key()
-    b = (create_public_key(p))
-    print(b)
-    print(p)
-    x = (encrypt_mhkc("HELLO",b))
-    print(x)
-    print(decrypt_mhkc(x, p))
+    # p = generate_private_key()
+    # b = (create_public_key(p))
+    # print(b)
+    # print(p)
+    # x = (encrypt_mhkc("HELLO",b))
+    # print(x)
+    # print(decrypt_mhkc(x, p))
 
-    private = ((10, 14, 35, 115, 248, 677, 1413, 3644), 10242, 5)
-    public = (50, 70, 175, 575, 1240, 3385, 7065, 7978)
-    message = "FOREACHEPSILONGREATERTHANDELTA"
-    encrypted = encrypt_mhkc(message, public)
-    print(encrypted)
-    print(decrypt_mhkc(encrypted, private))
+    # private = ((10, 14, 35, 115, 248, 677, 1413, 3644), 10242, 5)
+    # public = (50, 70, 175, 575, 1240, 3385, 7065, 7978)
+    # message = "FOREACHEPSILONGREATERTHANDELTA"
+    # encrypted = encrypt_mhkc(message, public)
+    # print(encrypted)
+    # print(decrypt_mhkc(encrypted, private))
 
-    print(encrypt_caesar("0DD !T$", 3))
+    # print(encrypt_caesar("0DD !T$", 3))
 
 if __name__ == "__main__":
     main()
