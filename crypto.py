@@ -1,15 +1,20 @@
+# imports
 import math
 import random
+
 # Caesar Cipher
 # Arguments: string, integer
 # Returns: string
 def encrypt_caesar(plaintext, offset):
     encrypted = ""
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     if len(plaintext) == 0:
         print("empty string")
     else:
         for char in plaintext:
-            if(ord(char) > (ord("Z") - offset)):
+            if char not in alphabet:
+                encrypted += char
+            elif(ord(char) > (ord("Z") - offset)):
                 characterValue = ord("A") - 1 + (offset - (ord("Z") - ord(char)))
                 encrypted += chr(characterValue)
             else:
@@ -21,11 +26,14 @@ def encrypt_caesar(plaintext, offset):
 # Returns: string
 def decrypt_caesar(ciphertext, offset):
     decrypted = ""
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     if len(ciphertext) == 0:
         print("empty string")
     else:
         for char in ciphertext:
-            if(ord(char) < (ord("A") + offset)):
+            if char not in alphabet:
+                decrypted += char
+            elif(ord(char) < (ord("A") + offset)):
                 characterValue = ord("Z") + 1 - (65+offset - ord(char))
                 decrypted += chr(characterValue)
             else:
@@ -136,8 +144,8 @@ def encrypt_mhkc(plaintext, public_key):
     return C
         
 
-
-
+# Arguments: an integer byte
+# Returns: a list of integers
 def byte_to_bits(byte):
     bits = []
     binary = bin(byte)[2:]
@@ -153,27 +161,62 @@ def byte_to_bits(byte):
 # Arguments: list of integers, tuple B - a length-n tuple of integers
 # Returns: bytearray or str of plaintext
 def decrypt_mhkc(ciphertext, private_key):
-    pass
+    W = private_key[0]
+    Q = private_key[1]
+    R = private_key[2]
+    S = findS(R, Q)
+    decrypted = []
+    for char in ciphertext:
+        C = char * S % Q
+        bitString = []
+        for element in reversed(W):
+            if element <= C:
+                bitString.append(1)
+                C -= element
+            else:
+                bitString.append(0)
+        decrypted.append(chr(bits_to_byte(reversed(bitString))))
+    
+    return "".join(decrypted)
 
+# Arguments: Q and R both integers
+# Returns: an integer
+def findS(R, Q):   
+    for S in range(2,Q - 1):
+        if (R * S % Q == 1):
+            return S
+    return 0
+
+# Arguments: a list of integers
+# Returns: an integer
 def bits_to_byte(bits):
     bitsAsStrings = []
+    byte = 0
     for element in bits:
         bitsAsStrings.append(str(element))
-    bitString = "".join(bitsAsStrings)
-    byte = int(bitString,2)
+        bitString = "".join(bitsAsStrings)
+        byte = int(bitString,2)
     return byte
 
+# main - to test code
 def main():
     # Testing code here
-    print(encrypt_caesar(" ", 3))
-    print(decrypt_caesar("DABC", 3))
-    print(encrypt_vigenere("ATTACKATDAWN","LEMON"))
-    print(decrypt_vigenere("LXFOPVEFRNHR","LEMON"))
-    print(generate_private_key())
-    print(create_public_key(generate_private_key()))
-    print(byte_to_bits(8))
-    print(bits_to_byte([0,1,0,0,1,0,1,0]))
-    print(encrypt_mhkc("AMAY", create_public_key(generate_private_key())))
+    p = generate_private_key()
+    b = (create_public_key(p))
+    print(b)
+    print(p)
+    x = (encrypt_mhkc("HELLO",b))
+    print(x)
+    print(decrypt_mhkc(x, p))
+
+    private = ((10, 14, 35, 115, 248, 677, 1413, 3644), 10242, 5)
+    public = (50, 70, 175, 575, 1240, 3385, 7065, 7978)
+    message = "FOREACHEPSILONGREATERTHANDELTA"
+    encrypted = encrypt_mhkc(message, public)
+    print(encrypted)
+    print(decrypt_mhkc(encrypted, private))
+
+    print(encrypt_caesar("0DD !T$", 3))
 
 if __name__ == "__main__":
     main()
