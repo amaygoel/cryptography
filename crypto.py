@@ -200,6 +200,7 @@ def bits_to_byte(bits):
 
 # main - to test code
 def main():
+    pass
     # Testing code here
     # p = generate_private_key()
     # b = (create_public_key(p))
